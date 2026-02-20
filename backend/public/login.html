@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Medilab Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1cb5e0, #000046);
+        }
+
+        .login-container {
+            width: 360px;
+            padding: 28px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            color: #fff;
+        }
+
+        h2 {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .sub-text {
+            font-size: 14px;
+            margin-bottom: 18px;
+            opacity: 0.9;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #1cb5e0;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover:not(:disabled) {
+            background: #1597bb;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .otp-box {
+            position: relative;
+        }
+
+        .toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .msg {
+            margin-top: 10px;
+            font-size: 14px;
+            min-height: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <h2>Medilab</h2>
+        <p class="sub-text">Login to access healthcare services</p>
+
+        <input type="text" id="phone" placeholder="Enter Mobile Number" maxlength="10">
+
+        <button id="sendOtpBtn">Send OTP</button>
+
+        <div id="otpSection" class="hidden">
+            <div class="otp-box">
+                <input type="password" id="otp" placeholder="Enter OTP" maxlength="6">
+                <span class="toggle" onclick="toggleOtp()">👁</span>
+            </div>
+            <button id="verifyOtpBtn">Verify & Login</button>
+        </div>
+
+        <div class="msg" id="msg"></div>
+    </div>
+
+    <script>
+        const phoneInput = document.getElementById("phone");
+        const otpInput = document.getElementById("otp");
+        const otpSection = document.getElementById("otpSection");
+        const sendOtpBtn = document.getElementById("sendOtpBtn");
+        const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+        const msg = document.getElementById("msg");
+
+        // =====================
+        // SEND OTP
+        // =====================
+        sendOtpBtn.addEventListener("click", async () => {
+            const mobile = phoneInput.value.trim();
+
+            if (!/^[6-9]\d{9}$/.test(mobile)) {
+                msg.innerText = "Enter valid 10-digit mobile number";
+                return;
+            }
+
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.innerText = "Sending OTP...";
+            msg.innerText = "";
+
+            try {
+                const res = await fetch("/api/customer/send-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mobile })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    otpSection.classList.remove("hidden");
+                    msg.innerText = "OTP sent successfully";
+                    sendOtpBtn.innerText = "OTP Sent";
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (err) {
+                msg.innerText = err.message || "Server error";
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerText = "Send OTP";
+            }
+        });
+
+        // =====================
+        // VERIFY OTP
+        // =====================
+        verifyOtpBtn.addEventListener("click", async () => {
+            const mobile = phoneInput.value.trim();
+            const otp = otpInput.value.trim();
+
+            if (otp.length !== 6) {
+                msg.innerText = "Enter 6-digit OTP";
+                return;
+            }
+
+            verifyOtpBtn.disabled = true;
+            verifyOtpBtn.innerText = "Verifying...";
+            msg.innerText = "";
+
+            try {
+                const res = await fetch("/api/customer/verify-otp", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ mobile, otp })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    // 🔐 SAVE USER FOR NAVBAR
+                    localStorage.setItem("medilab_logged_in", "true");
+                    localStorage.setItem("medilab_user", JSON.stringify({
+                        name: "Suraj",       // later backend se aayega
+                        mobile: mobile
+                    }));
+
+                    window.location.href = "/medilab";
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (err) {
+                msg.innerText = err.message || "Invalid OTP";
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.innerText = "Verify & Login";
+            }
+        });
+
+        function toggleOtp() {
+            otpInput.type = otpInput.type === "password" ? "text" : "password";
+        }
+    </script>
+
+</body>
+
+</html>

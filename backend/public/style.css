@@ -1,0 +1,10 @@
+/* Global tweaks */
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Card hover enhancement */
+.service-card:hover {
+    transform: translateY(-4px);
+    transition: 0.3s ease;
+}

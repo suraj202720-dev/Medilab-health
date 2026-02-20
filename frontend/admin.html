@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Medilab Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CHART + EXCEL -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <style>
+        * {
+            font-family: Segoe UI, system-ui;
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(135deg, #0f4c81, #1e88e5);
+            padding: 20px
+        }
+
+        .header,
+        .container {
+            max-width: 1100px;
+            margin: auto
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            color: #fff
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 14px
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        .logoutbtn {
+            background: #dc2626;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 16px 0
+        }
+
+        .card {
+            padding: 16px;
+            border-radius: 12px;
+            color: #fff
+        }
+
+        .new {
+            background: #2563eb
+        }
+
+        .called {
+            background: #f59e0b
+        }
+
+        .done {
+            background: #16a34a
+        }
+
+        .deleted {
+            background: #dc2626
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px
+        }
+
+        th {
+            background: #0f4c81;
+            color: #fff
+        }
+
+        select {
+            padding: 4px
+        }
+
+        .tabs button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            margin-right: 6px
+        }
+
+        .tabs .active {
+            background: #1e88e5;
+            color: #fff
+        }
+
+        .export-btn {
+            background: #0f4c81;
+            color: #fff;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 8px
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        if (localStorage.getItem("adminLoggedIn") !== "true") { location.href = "admin-login.html" }
+    </script>
+
+    <div class="header">
+        <h1>🧪 Medilab Admin Panel</h1>
+        <button class="logoutbtn" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container">
+        <button onclick="loadData()">🔄 Refresh</button>
+        <button class="export-btn" onclick="exportExcel()">⬇ Export Excel</button>
+
+        <!-- DASHBOARD -->
+        <div class="dashboard">
+            <div class="card new">
+                <h3>New</h3>
+                <p id="cNew">0</p>
+            </div>
+            <div class="card called">
+                <h3>Called</h3>
+                <p id="cCalled">0</p>
+            </div>
+            <div class="card done">
+                <h3>Done</h3>
+                <p id="cDone">0</p>
+            </div>
+            <div class="card deleted">
+                <h3>Deleted</h3>
+                <p id="cDeleted">0</p>
+            </div>
+        </div>
+
+        <canvas id="statusChart" height="120"></canvas>
+
+        <!-- TABS -->
+        <div class="tabs" style="margin-top:14px">
+            <button id="tabContacts" class="active" onclick="showContacts()">Contacts</button>
+            <button id="tabBookings" onclick="showBookings()">Bookings</button>
+        </div>
+
+        <!-- CONTACT TABLE -->
+        <table id="contactTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+
+        <!-- BOOKING TABLE -->
+        <table id="bookingTable" style="display:none">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Mobile</th>
+                    <th>Tests</th>
+                    <th>Total ₹</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="bookingBody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const CONTACT_API = "http://localhost:5000/api/contacts";
+        const BOOKING_API = "http://localhost:5000/api/bookings";
+        let contacts = [], bookings = [], chart;
+
+        function logout() { localStorage.removeItem("adminLoggedIn"); location.href = "admin-login.html" }
+
+        async function loadData() {
+            contacts = await (await fetch(CONTACT_API)).json();
+            bookings = await (await fetch(BOOKING_API)).json();
+            updateCounts(); renderContacts(); renderChart();
+        }
+
+        function updateCounts() {
+            const all = [...contacts, ...bookings];
+            cNew.innerText = all.filter(x => x.status === "New").length;
+            cCalled.innerText = all.filter(x => x.status === "Called").length;
+            cDone.innerText = all.filter(x => x.status === "Done").length;
+            cDeleted.innerText = contacts.filter(x => x.status === "Deleted").length;
+        }
+
+        function renderChart() {
+            if (chart) chart.destroy();
+            chart = new Chart(statusChart, {
+                type: "pie",
+                data: {
+                    labels: ["New", "Called", "Done", "Deleted"],
+                    datasets: [{
+                        data: [cNew.innerText, cCalled.innerText, cDone.innerText, cDeleted.innerText],
+                        backgroundColor: ["#2563eb", "#f59e0b", "#16a34a", "#dc2626"]
+                    }]
+                }
+            })
+        }
+
+        /* CONTACTS */
+        function renderContacts() {
+            tbody.innerHTML = "";
+            contacts.forEach(r => {
+                tbody.innerHTML += `
+        <tr>
+        <td>${r.id}</td><td>${r.name}</td><td>${r.phone}</td>
+        <td>${r.email || "-"}</td><td>${r.message || "-"}</td>
+        <td><select onchange="setContactStatus(${r.id},this.value)">
+            <option ${r.status === "New" ? "selected" : ""}>New</option>
+            <option ${r.status === "Called" ? "selected" : ""}>Called</option>
+            <option ${r.status === "Done" ? "selected" : ""}>Done</option>
+        </select></td>
+        <td><button onclick="delContact(${r.id})">Delete</button></td>
+        </tr>`
+            })
+        }
+
+        async function setContactStatus(id, status) {
+            await fetch(`${CONTACT_API}/${id}/status`, { method: "PUT", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+            loadData();
+        }
+        async function delContact(id) {
+            await fetch(`${CONTACT_API}/${id}`, { method: "DELETE" }); loadData();
+        }
+
+        /* BOOKINGS */
+        function renderBookings() {
+            bookingBody.innerHTML = "";
+            bookings.forEach(b => {
+                bookingBody.innerHTML += `
+        <tr>
+        <td>${b.id}</td><td>${b.patient_name}</td><td>${b.mobile}</td>
+        <td>${b.tests}</td><td>₹${b.total}</td>
+        <td><select onchange="setBookingStatus(${b.id},this.value)">
+            <option ${b.status === "New" ? "selected" : ""}>New</option>
+            <option ${b.status === "Called" ? "selected" : ""}>Called</option>
+            <option ${b.status === "Done" ? "selected" : ""}>Done</option>
+        </select></td>
+        <td>${new Date(b.created_at).toLocaleString()}</td>
+        </tr>`
+            })
+        }
+
+        async function setBookingStatus(id, status) {
+            await fetch(`${BOOKING_API}/${id}/status`, { method: "PUT", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+            loadData();
+        }
+
+        /* TAB SWITCH */
+        function showContacts() { contactTable.style.display = ""; bookingTable.style.display = "none" }
+        function showBookings() { contactTable.style.display = "none"; bookingTable.style.display = ""; renderBookings() }
+
+        /* EXPORT */
+        function exportExcel() {
+            const data = bookingTable.style.display === "none" ? contacts : bookings;
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data");
+            XLSX.writeFile(wb, "medilab_export.xlsx");
+        }
+
+        loadData();
+    </script>
+
+</body>
+
+</html>
