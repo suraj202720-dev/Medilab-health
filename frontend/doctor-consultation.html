@@ -10,87 +10,204 @@
 
 <body class="bg-slate-50 text-slate-700">
 
-    <header class="bg-white border-b">
+    <!-- HEADER -->
+    <header class="bg-white border-b sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <h1 class="text-xl font-extrabold">MEDILAB</h1>
-            <a href="/" class="text-blue-600 font-semibold">Home</a>
+            <h1 class="text-xl font-extrabold text-blue-600">MEDILAB</h1>
+            <a href="index.html" class="text-blue-600 font-semibold">Home</a>
         </div>
     </header>
 
-    <section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-14 text-center">
-        <h2 class="text-4xl font-bold">Doctor Consultation</h2>
-        <p class="opacity-90 mt-2">Choose a doctor and request treatment</p>
+    <!-- HERO -->
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-24 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold">Doctor Consultation</h2>
+        <p class="opacity-90 mt-4 text-lg">Choose a doctor & book consultation</p>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-3 gap-8">
+    <!-- DOCTORS -->
+    <section class="max-w-7xl mx-auto px-4 py-24">
+        <h3 class="text-3xl font-bold mb-12 text-center">Available Doctors</h3>
 
-        <div class="bg-white p-8 rounded-3xl shadow text-center">
-            <h3 class="text-xl font-bold">Dr. Sharma</h3>
-            <p class="opacity-70">Cardiologist</p>
-            <button onclick="selectDoctor(this,'Dr. Sharma','Cardiologist')"
-                class="mt-5 bg-blue-600 text-white px-6 py-2 rounded-xl">
-                Select Doctor
-            </button>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+            <!-- DOCTOR CARD -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=12" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Sharma</h3>
+                <p class="text-blue-600 font-semibold">Cardiologist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Sharma','Cardiologist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=32" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Patel</h3>
+                <p class="text-blue-600 font-semibold">Diabetologist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Patel','Diabetologist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=56" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Khan</h3>
+                <p class="text-blue-600 font-semibold">Physician</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Khan','Physician')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <!-- 4 -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=4" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Mehta</h3>
+                <p class="text-blue-600 font-semibold">Neurologist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Mehta','Neurologist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <!-- 5 -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=18" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Verma</h3>
+                <p class="text-blue-600 font-semibold">Orthopedic</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Verma','Orthopedic')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <!-- 6 -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=22" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Roy</h3>
+                <p class="text-blue-600 font-semibold">Dermatologist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Roy','Dermatologist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <!-- 7 -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=40" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Singh</h3>
+                <p class="text-blue-600 font-semibold">ENT Specialist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Singh','ENT Specialist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <!-- 8 -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=48" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Iyer</h3>
+                <p class="text-blue-600 font-semibold">Gastroenterologist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Iyer','Gastroenterologist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+            <!-- 9 -->
+            <div class="bg-white rounded-3xl shadow p-8 text-center">
+                <img src="https://i.pravatar.cc/150?img=65" class="w-28 h-28 mx-auto rounded-full mb-4">
+                <h3 class="text-xl font-bold">Dr. Bose</h3>
+                <p class="text-blue-600 font-semibold">Oncologist</p>
+                <p class="text-sm opacity-70 mt-2">₹500 Consultation</p>
+                <button onclick="openForm('Dr. Bose','Oncologist')"
+                    class="mt-6 w-full bg-blue-600 text-white py-3 rounded-xl">
+                    Book Consultation
+                </button>
+            </div>
+
+
         </div>
-
-        <div class="bg-white p-8 rounded-3xl shadow text-center">
-            <h3 class="text-xl font-bold">Dr. Patel</h3>
-            <p class="opacity-70">Diabetologist</p>
-            <button onclick="selectDoctor(this,'Dr. Patel','Diabetologist')"
-                class="mt-5 bg-blue-600 text-white px-6 py-2 rounded-xl">
-                Select Doctor
-            </button>
-        </div>
-
-        <div class="bg-white p-8 rounded-3xl shadow text-center">
-            <h3 class="text-xl font-bold">Dr. Khan</h3>
-            <p class="opacity-70">Physician</p>
-            <button onclick="selectDoctor(this,'Dr. Khan','Physician')"
-                class="mt-5 bg-blue-600 text-white px-6 py-2 rounded-xl">
-                Select Doctor
-            </button>
-        </div>
-
     </section>
+
+    <!-- BOOKING MODAL -->
+    <div id="bookingModal" class="fixed inset-0 bg-black/60 hidden flex items-center justify-center z-50">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 relative">
+
+            <h3 class="text-2xl font-bold mb-2">Confirm Doctor Booking</h3>
+            <p id="doctorInfo" class="text-sm mb-4"></p>
+
+            <input id="patientName" class="w-full border px-4 py-2 mb-3 rounded-lg" placeholder="Patient Name">
+
+            <input id="patientMobile" class="w-full border px-4 py-2 mb-4 rounded-lg" placeholder="Mobile Number">
+
+            <button onclick="confirmBooking()" class="w-full bg-blue-600 text-white py-3 rounded-xl">
+                Confirm Booking
+            </button>
+
+            <button onclick="closeModal()" class="absolute top-3 right-4 text-xl font-bold">×</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
     <script>
-        function selectDoctor(btn, name, speciality) {
-            btn.disabled = true;
-            btn.innerText = "Processing...";
+        let selectedDoctor = "";
+        let selectedSpeciality = "";
+        const CONSULTATION_FEE = 500;
 
-            fetch("/api/contacts/doctor-consultation", {
+        function openForm(name, speciality) {
+            selectedDoctor = name;
+            selectedSpeciality = speciality;
+            document.getElementById("doctorInfo").innerText =
+                `${name} (${speciality}) – ₹${CONSULTATION_FEE}`;
+            document.getElementById("bookingModal").classList.remove("hidden");
+        }
+
+        function closeModal() {
+            document.getElementById("bookingModal").classList.add("hidden");
+        }
+
+        function confirmBooking() {
+            const name = patientName.value.trim();
+            const mobile = patientMobile.value.trim();
+
+            if (!name || !mobile) {
+                alert("Enter patient details");
+                return;
+            }
+
+            fetch("http://localhost:5000/api/bookings", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    doctor_name: name,
-                    speciality: speciality
+                    patient_name: name,
+                    mobile: mobile,
+                    tests: `Doctor Consultation - ${selectedDoctor} (${selectedSpeciality})`,
+                    total: CONSULTATION_FEE
                 })
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log("API RESPONSE:", data);
-
                     if (data.success) {
-                        btn.innerText = "Selected ✔";
-                        btn.classList.remove("bg-blue-600");
-                        btn.classList.add("bg-green-600");
+                        alert("✅ Doctor Consultation Booked");
+                        closeModal();
                     } else {
-                        btn.innerText = "Select Doctor";
-                        btn.disabled = false;
-                        alert(data.message || "Error saving data");
+                        alert("Booking failed");
                     }
                 })
-                .catch(err => {
-                    console.error("FETCH ERROR:", err);
-                    btn.innerText = "Select Doctor";
-                    btn.disabled = false;
-                    alert("Server error");
-                });
+                .catch(() => alert("Server error"));
         }
     </script>
-
-
 
 </body>
 

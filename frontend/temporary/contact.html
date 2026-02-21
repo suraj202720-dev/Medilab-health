@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Contact Medilab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f4c81, #1e88e5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .contact-card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            padding: 34px 30px;
+            border-radius: 18px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f4c81;
+            margin-bottom: 6px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #1e88e5;
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.18);
+        }
+
+        textarea {
+            resize: none;
+            min-height: 90px;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 136, 229, 0.4);
+        }
+
+        .info {
+            text-align: center;
+            font-size: 13px;
+            color: #4b5563;
+            margin-top: 14px;
+        }
+
+        #result {
+            margin-top: 14px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .success {
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .whatsapp {
+            flex: 1;
+            text-align: center;
+            padding: 11px;
+            border-radius: 10px;
+            background: #25d366;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .call {
+            flex: 1;
+            text-align: center;
+            padding: 11px;
+            border-radius: 10px;
+            background: #0f4c81;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="contact-card">
+        <div class="logo">Medilab</div>
+        <div class="subtitle">Trusted diagnostics • Home sample collection</div>
+
+        <form id="contactForm">
+            <div class="input-group">
+                <input type="text" id="name" placeholder="Patient Name" required>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="phone" placeholder="Mobile Number" required>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Email (optional)">
+            </div>
+
+            <div class="input-group">
+                <textarea id="message" placeholder="Test / Package / Home Collection query"></textarea>
+            </div>
+
+            <button type="submit">Request Call Back</button>
+        </form>
+
+        <div id="result"></div>
+
+        <div class="info">
+            Our lab executive will contact you shortly
+        </div>
+
+        <div class="actions">
+
+            <a class="whatsapp" href="https://wa.me/917038810817" target="_blank">
+                WhatsApp
+            </a>
+            <a class="call" href="tel:+917038810817" onclick="alert('Please call us on 7038810817 from your phone 📞')">
+                Call Now
+            </a>
+
+        </div>
+    </div>
+
+
+    <script>
+        const form = document.getElementById("contactForm");
+        const resultDiv = document.getElementById("result");
+
+        const nameInput = document.getElementById("name");
+        const phoneInput = document.getElementById("phone");
+        const emailInput = document.getElementById("email");
+        const messageInput = document.getElementById("message");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            resultDiv.textContent = "Submitting request...";
+            resultDiv.className = "";
+
+            const data = {
+                name: nameInput.value,
+                phone: phoneInput.value,
+                email: emailInput.value,
+                message: messageInput.value
+            };
+
+            try {
+                const res = await fetch("http://localhost:5000/api/contacts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    resultDiv.textContent = "Request submitted successfully ✅";
+                    resultDiv.className = "success";
+                    form.reset();
+                } else {
+                    resultDiv.textContent = "Something went wrong ❌";
+                    resultDiv.className = "error";
+                }
+            } catch (err) {
+                resultDiv.textContent = "Server not reachable ❌";
+                resultDiv.className = "error";
+                console.error(err);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

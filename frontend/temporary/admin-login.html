@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Medilab Admin Login</title>
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        * {
+            font-family: "Segoe UI", system-ui, sans-serif;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f4c81, #1e88e5);
+        }
+
+        .card {
+            background: #fff;
+            width: 340px;
+            padding: 28px;
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .3);
+        }
+
+        h2 {
+            text-align: center;
+            color: #0f4c81;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 42px 12px 12px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #1e88e5;
+            box-shadow: 0 0 0 3px rgba(30, 136, 229, .25);
+        }
+
+        .eye {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 16px;
+            color: #6b7280;
+            user-select: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #1e88e5, #0f4c81);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: .95
+        }
+
+        #error {
+            margin-top: 10px;
+            text-align: center;
+            color: #dc2626;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+        <h2>🔐 Admin Login</h2>
+
+        <div class="input-group">
+            <input id="username" placeholder="Username">
+        </div>
+
+        <div class="input-group">
+            <input id="password" type="password" placeholder="Password">
+            <span class="eye" onclick="togglePassword()">👁</span>
+        </div>
+
+        <button onclick="login()">Login</button>
+        <div id="error"></div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const p = document.getElementById("password");
+            p.type = p.type === "password" ? "text" : "password";
+        }
+
+        async function login() {
+            const res = await fetch("http://localhost:5000/api/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: username.value,
+                    password: password.value
+                })
+            });
+
+            const data = await res.json();
+            if (data.success) {
+                localStorage.setItem("adminLoggedIn", "true");
+                location.href = "admin.html";
+            } else {
+                error.innerText = data.message;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

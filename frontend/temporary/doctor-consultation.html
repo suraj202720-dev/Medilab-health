@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor Consultation | Medilab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-700">
+
+    <header class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-extrabold">MEDILAB</h1>
+            <a href="/" class="text-blue-600 font-semibold">Home</a>
+        </div>
+    </header>
+
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-14 text-center">
+        <h2 class="text-4xl font-bold">Doctor Consultation</h2>
+        <p class="opacity-90 mt-2">Choose a doctor and request treatment</p>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-4 py-20 grid md:grid-cols-3 gap-8">
+
+        <div class="bg-white p-8 rounded-3xl shadow text-center">
+            <h3 class="text-xl font-bold">Dr. Sharma</h3>
+            <p class="opacity-70">Cardiologist</p>
+            <button onclick="selectDoctor(this,'Dr. Sharma','Cardiologist')"
+                class="mt-5 bg-blue-600 text-white px-6 py-2 rounded-xl">
+                Select Doctor
+            </button>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl shadow text-center">
+            <h3 class="text-xl font-bold">Dr. Patel</h3>
+            <p class="opacity-70">Diabetologist</p>
+            <button onclick="selectDoctor(this,'Dr. Patel','Diabetologist')"
+                class="mt-5 bg-blue-600 text-white px-6 py-2 rounded-xl">
+                Select Doctor
+            </button>
+        </div>
+
+        <div class="bg-white p-8 rounded-3xl shadow text-center">
+            <h3 class="text-xl font-bold">Dr. Khan</h3>
+            <p class="opacity-70">Physician</p>
+            <button onclick="selectDoctor(this,'Dr. Khan','Physician')"
+                class="mt-5 bg-blue-600 text-white px-6 py-2 rounded-xl">
+                Select Doctor
+            </button>
+        </div>
+
+    </section>
+    <script>
+        function selectDoctor(btn, name, speciality) {
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            fetch("/api/contacts/doctor-consultation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    doctor_name: name,
+                    speciality: speciality
+                })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("API RESPONSE:", data);
+
+                    if (data.success) {
+                        btn.innerText = "Selected ✔";
+                        btn.classList.remove("bg-blue-600");
+                        btn.classList.add("bg-green-600");
+                    } else {
+                        btn.innerText = "Select Doctor";
+                        btn.disabled = false;
+                        alert(data.message || "Error saving data");
+                    }
+                })
+                .catch(err => {
+                    console.error("FETCH ERROR:", err);
+                    btn.innerText = "Select Doctor";
+                    btn.disabled = false;
+                    alert("Server error");
+                });
+        }
+    </script>
+
+
+
+</body>
+
+</html>

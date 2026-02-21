@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Medilab – Booking Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            background: #0f4c81;
+            font-family: Segoe UI;
+            color: #111
+        }
+
+        .wrap {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px
+        }
+
+        h1 {
+            margin: 0 0 20px
+        }
+
+        .dash {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px
+        }
+
+        .card {
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px
+        }
+
+        .new {
+            background: #2563eb
+        }
+
+        .called {
+            background: #f59e0b
+        }
+
+        .done {
+            background: #16a34a
+        }
+
+        .deleted {
+            background: #dc2626
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb
+        }
+
+        th {
+            background: #0f4c81;
+            color: #fff
+        }
+
+        select,
+        button {
+            padding: 6px 10px
+        }
+
+        .top {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        if (localStorage.getItem("adminLoggedIn") !== "true") {
+            location.href = "admin-login.html";
+        }
+    </script>
+
+    <div class="wrap">
+        <h1>🧪 Booking Admin Panel</h1>
+
+        <div class="top">
+            <button onclick="load()">🔄 Refresh</button>
+            <button onclick="exportExcel()">⬇ Export Excel</button>
+        </div>
+
+        <div class="dash">
+            <div class="card new">New<br><b id="cNew">0</b></div>
+            <div class="card called">Called<br><b id="cCalled">0</b></div>
+            <div class="card done">Done<br><b id="cDone">0</b></div>
+            <div class="card deleted">Deleted<br><b id="cDeleted">0</b></div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Patient</th>
+                    <th>Mobile</th>
+                    <th>Tests</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const API = "http://localhost:5000/api/bookings";
+        let data = [];
+
+        async function load() {
+            const r = await fetch(API);
+            data = await r.json();
+            counts();
+            render();
+        }
+
+        function counts() {
+            cNew.innerText = data.filter(x => x.status === "New").length;
+            cCalled.innerText = data.filter(x => x.status === "Called").length;
+            cDone.innerText = data.filter(x => x.status === "Done").length;
+            cDeleted.innerText = data.filter(x => x.status === "Deleted").length;
+        }
+
+        function render() {
+            tbody.innerHTML = "";
+            if (!data.length) {
+                tbody.innerHTML = "<tr><td colspan='7'>No bookings</td></tr>";
+                return;
+            }
+            data.forEach(b => {
+                tbody.innerHTML += `
+    <tr>
+      <td>${b.id}</td>
+      <td>${b.patient_name}</td>
+      <td>${b.mobile}</td>
+      <td>${b.tests}</td>
+      <td>₹${b.total}</td>
+      <td>
+        <select onchange="setStatus(${b.id},this.value)">
+          <option ${b.status === "New" ? "selected" : ""}>New</option>
+          <option ${b.status === "Called" ? "selected" : ""}>Called</option>
+          <option ${b.status === "Done" ? "selected" : ""}>Done</option>
+        </select>
+      </td>
+      <td>${new Date(b.created_at).toLocaleString()}</td>
+    </tr>`;
+            });
+        }
+
+        async function setStatus(id, status) {
+            await fetch(`${API}/${id}/status`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status })
+            });
+            load();
+        }
+
+        function exportExcel() {
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Bookings");
+            XLSX.writeFile(wb, "medilab_bookings.xlsx");
+        }
+
+        load();
+    </script>
+</body>
+
+</html>

@@ -6,8 +6,6 @@
     <title>Medilab Admin Panel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- CHART + EXCEL -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
     <style>
@@ -19,95 +17,108 @@
         body {
             margin: 0;
             background: linear-gradient(135deg, #0f4c81, #1e88e5);
+            min-height: 100vh;
             padding: 20px
         }
 
-        .header,
-        .container {
-            max-width: 1100px;
-            margin: auto
-        }
-
         .header {
+            max-width: 1100px;
+            margin: auto;
             display: flex;
             justify-content: space-between;
-            color: #fff
-        }
-
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 14px
-        }
-
-        button {
-            cursor: pointer
+            align-items: center;
+            color: #fff;
+            margin-bottom: 20px
         }
 
         .logoutbtn {
             background: #dc2626;
             color: #fff;
+            border: none;
             padding: 8px 16px;
-            border-radius: 8px;
-            border: none
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer
         }
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin: 16px 0
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
         }
 
-        .card {
-            padding: 16px;
-            border-radius: 12px;
-            color: #fff
+        .status-flow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0 30px
         }
 
-        .new {
-            background: #2563eb
+        .circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, .25)
         }
 
-        .called {
-            background: #f59e0b
+        .circle span {
+            font-size: 34px
         }
 
-        .done {
-            background: #16a34a
-        }
-
-        .deleted {
-            background: #dc2626
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px
-        }
-
-        th,
-        td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
+        .circle p {
+            margin: 6px 0 0;
             font-size: 14px
         }
 
-        th {
-            background: #0f4c81;
-            color: #fff
+        .c-new {
+            background: linear-gradient(135deg, #2563eb, #1e40af)
         }
 
-        select {
-            padding: 4px
+        .c-called {
+            background: linear-gradient(135deg, #f59e0b, #b45309)
+        }
+
+        .c-done {
+            background: linear-gradient(135deg, #16a34a, #166534)
+        }
+
+        .arrow {
+            font-size: 40px;
+            color: #1e88e5;
+            font-weight: bold
+        }
+
+        .top-btns button {
+            background: #1e88e5;
+            color: #fff;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-right: 6px;
+            cursor: pointer
+        }
+
+        .tabs {
+            margin: 20px 0
         }
 
         .tabs button {
             padding: 8px 14px;
             border: none;
             border-radius: 6px;
-            margin-right: 6px
+            margin-right: 6px;
+            font-weight: 600;
+            cursor: pointer
         }
 
         .tabs .active {
@@ -115,12 +126,42 @@
             color: #fff
         }
 
-        .export-btn {
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        th,
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px
+        }
+
+        th {
             background: #0f4c81;
             color: #fff;
-            padding: 8px 14px;
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 6px
+        }
+
+        .delete {
+            background: #dc2626;
+            color: #fff;
             border: none;
-            border-radius: 8px
+            padding: 5px 10px;
+            border-radius: 6px
+        }
+
+        .restore {
+            background: #16a34a;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px
         }
     </style>
 </head>
@@ -128,7 +169,7 @@
 <body>
 
     <script>
-        if (localStorage.getItem("adminLoggedIn") !== "true") { location.href = "admin-login.html" }
+        if (localStorage.getItem("adminLoggedIn") !== "true") { location.href = "admin-login.html"; }
     </script>
 
     <div class="header">
@@ -137,168 +178,233 @@
     </div>
 
     <div class="container">
-        <button onclick="loadData()">🔄 Refresh</button>
-        <button class="export-btn" onclick="exportExcel()">⬇ Export Excel</button>
 
-        <!-- DASHBOARD -->
-        <div class="dashboard">
-            <div class="card new">
-                <h3>New</h3>
-                <p id="cNew">0</p>
+        <div class="status-flow">
+            <div class="circle c-new"><span id="countNew">0</span>
+                <p>New</p>
             </div>
-            <div class="card called">
-                <h3>Called</h3>
-                <p id="cCalled">0</p>
+            <div class="arrow">➜</div>
+            <div class="circle c-called"><span id="countCalled">0</span>
+                <p>Called</p>
             </div>
-            <div class="card done">
-                <h3>Done</h3>
-                <p id="cDone">0</p>
-            </div>
-            <div class="card deleted">
-                <h3>Deleted</h3>
-                <p id="cDeleted">0</p>
+            <div class="arrow">➜</div>
+            <div class="circle c-done"><span id="countDone">0</span>
+                <p>Done</p>
             </div>
         </div>
 
-        <canvas id="statusChart" height="120"></canvas>
-
-        <!-- TABS -->
-        <div class="tabs" style="margin-top:14px">
-            <button id="tabContacts" class="active" onclick="showContacts()">Contacts</button>
-            <button id="tabBookings" onclick="showBookings()">Bookings</button>
+        <div class="top-btns">
+            <button onclick="loadContacts()">🔄 Refresh</button>
+            <button onclick="exportExcel()">⬇ Export Excel</button>
         </div>
 
-        <!-- CONTACT TABLE -->
-        <table id="contactTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Message</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-        </table>
+        <div class="tabs">
+            <button id="tabContacts" class="active" onclick="showContacts()">🧾 Bookings</button>
+            <button id="tabBookings" onclick="showBookings()">📞 Contacts</button>
+            <button id="tabTrash" onclick="showTrash()">🗑 Deleted</button>
+        </div>
 
-        <!-- BOOKING TABLE -->
-        <table id="bookingTable" style="display:none">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Patient</th>
-                    <th>Mobile</th>
-                    <th>Tests</th>
-                    <th>Total ₹</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody id="bookingBody"></tbody>
-        </table>
+        <div id="contactSection">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="contactBody"></tbody>
+            </table>
+        </div>
+
+        <div id="bookingSection" style="display:none">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Mobile</th>
+                        <th>Tests</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="bookingBody"></tbody>
+            </table>
+        </div>
+
+        <div id="trashSection" style="display:none">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="trashBody"></tbody>
+            </table>
+        </div>
+
     </div>
 
     <script>
         const CONTACT_API = "http://localhost:5000/api/contacts";
         const BOOKING_API = "http://localhost:5000/api/bookings";
-        let contacts = [], bookings = [], chart;
 
-        function logout() { localStorage.removeItem("adminLoggedIn"); location.href = "admin-login.html" }
+        let contacts = [], bookings = [], trash = [];
 
-        async function loadData() {
-            contacts = await (await fetch(CONTACT_API)).json();
-            bookings = await (await fetch(BOOKING_API)).json();
-            updateCounts(); renderContacts(); renderChart();
+        const countNew = document.getElementById("countNew");
+        const countCalled = document.getElementById("countCalled");
+        const countDone = document.getElementById("countDone");
+
+        function logout() { localStorage.removeItem("adminLoggedIn"); location.href = "admin-login.html"; }
+
+        function updateBigCounts() {
+            const activeContacts = contacts.filter(x => !x._deleted);
+            const activeBookings = bookings.filter(x => !x._deleted);
+            const all = [...activeContacts, ...activeBookings];
+            countNew.innerText = all.filter(x => x.status === "New" || !x.status).length;
+            countCalled.innerText = all.filter(x => x.status === "Called").length;
+            countDone.innerText = all.filter(x => x.status === "Done").length;
         }
 
-        function updateCounts() {
-            const all = [...contacts, ...bookings];
-            cNew.innerText = all.filter(x => x.status === "New").length;
-            cCalled.innerText = all.filter(x => x.status === "Called").length;
-            cDone.innerText = all.filter(x => x.status === "Done").length;
-            cDeleted.innerText = contacts.filter(x => x.status === "Deleted").length;
+        async function loadContacts() {
+            const r = await fetch(CONTACT_API);
+            contacts = await r.json();
+            contacts = Array.isArray(contacts) ? contacts : (contacts.data || []);
+            renderContacts(); updateTrash(); updateBigCounts();
         }
 
-        function renderChart() {
-            if (chart) chart.destroy();
-            chart = new Chart(statusChart, {
-                type: "pie",
-                data: {
-                    labels: ["New", "Called", "Done", "Deleted"],
-                    datasets: [{
-                        data: [cNew.innerText, cCalled.innerText, cDone.innerText, cDeleted.innerText],
-                        backgroundColor: ["#2563eb", "#f59e0b", "#16a34a", "#dc2626"]
-                    }]
-                }
-            })
-        }
-
-        /* CONTACTS */
         function renderContacts() {
-            tbody.innerHTML = "";
-            contacts.forEach(r => {
-                tbody.innerHTML += `
-        <tr>
-        <td>${r.id}</td><td>${r.name}</td><td>${r.phone}</td>
-        <td>${r.email || "-"}</td><td>${r.message || "-"}</td>
-        <td><select onchange="setContactStatus(${r.id},this.value)">
-            <option ${r.status === "New" ? "selected" : ""}>New</option>
-            <option ${r.status === "Called" ? "selected" : ""}>Called</option>
-            <option ${r.status === "Done" ? "selected" : ""}>Done</option>
-        </select></td>
-        <td><button onclick="delContact(${r.id})">Delete</button></td>
-        </tr>`
-            })
+            contactBody.innerHTML = "";
+            const active = contacts.filter(x => !x._deleted);
+            if (!active.length) { contactBody.innerHTML = "<tr><td colspan='7'>No contacts</td></tr>"; return; }
+            active.forEach(r => {
+                contactBody.innerHTML += `
+<tr>
+<td>${r.id}</td>
+<td>${r.name}</td>
+<td>${r.phone}</td>
+<td>${r.email || "-"}</td>
+<td>${r.message || "-"}</td>
+<td>
+<select onchange="setContactStatus(${r.id},this.value)">
+<option ${r.status === "New" ? "selected" : ""}>New</option>
+<option ${r.status === "Called" ? "selected" : ""}>Called</option>
+<option ${r.status === "Done" ? "selected" : ""}>Done</option>
+</select>
+</td>
+<td><button class="delete" onclick="softDelete(${r.id})">Delete</button></td>
+</tr>`;
+            });
+        }
+
+        function softDelete(id) {
+            if (confirm("Move to trash?")) {
+                const item = contacts.find(x => x.id === id);
+                item._deleted = true;
+                renderContacts(); updateTrash(); updateBigCounts();
+            }
+        }
+
+        function updateTrash() {
+            trash = contacts.filter(x => x._deleted);
+            trashBody.innerHTML = "";
+            if (!trash.length) { trashBody.innerHTML = "<tr><td colspan='5'>No deleted records</td></tr>"; return; }
+            trash.forEach(r => {
+                trashBody.innerHTML += `
+<tr>
+<td>${r.id}</td>
+<td>${r.name}</td>
+<td>${r.phone}</td>
+<td>Contact</td>
+<td><button class="restore" onclick="restore(${r.id})">Restore</button></td>
+</tr>`;
+            });
+        }
+
+        function restore(id) {
+            const item = contacts.find(x => x.id === id);
+            item._deleted = false;
+            renderContacts(); updateTrash(); updateBigCounts();
         }
 
         async function setContactStatus(id, status) {
-            await fetch(`${CONTACT_API}/${id}/status`, { method: "PUT", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
-            loadData();
-        }
-        async function delContact(id) {
-            await fetch(`${CONTACT_API}/${id}`, { method: "DELETE" }); loadData();
+            await fetch(`${CONTACT_API}/${id}/status`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status })
+            });
+            loadContacts();
         }
 
-        /* BOOKINGS */
+        function showContacts() {
+            tabContacts.classList.add("active");
+            tabBookings.classList.remove("active");
+            tabTrash.classList.remove("active");
+            contactSection.style.display = "block";
+            bookingSection.style.display = "none";
+            trashSection.style.display = "none";
+        }
+
+        function showBookings() {
+            tabBookings.classList.add("active");
+            tabContacts.classList.remove("active");
+            tabTrash.classList.remove("active");
+            contactSection.style.display = "none";
+            bookingSection.style.display = "block";
+            trashSection.style.display = "none";
+            loadBookings();
+        }
+
+        function showTrash() {
+            tabTrash.classList.add("active");
+            tabContacts.classList.remove("active");
+            tabBookings.classList.remove("active");
+            contactSection.style.display = "none";
+            bookingSection.style.display = "none";
+            trashSection.style.display = "block";
+            updateTrash();
+        }
+
+        async function loadBookings() {
+            const r = await fetch(BOOKING_API);
+            bookings = await r.json();
+            bookings = Array.isArray(bookings) ? bookings : [];
+            renderBookings(); updateBigCounts();
+        }
+
         function renderBookings() {
             bookingBody.innerHTML = "";
+            if (!bookings.length) { bookingBody.innerHTML = "<tr><td colspan='6'>No bookings</td></tr>"; return; }
             bookings.forEach(b => {
                 bookingBody.innerHTML += `
-        <tr>
-        <td>${b.id}</td><td>${b.patient_name}</td><td>${b.mobile}</td>
-        <td>${b.tests}</td><td>₹${b.total}</td>
-        <td><select onchange="setBookingStatus(${b.id},this.value)">
-            <option ${b.status === "New" ? "selected" : ""}>New</option>
-            <option ${b.status === "Called" ? "selected" : ""}>Called</option>
-            <option ${b.status === "Done" ? "selected" : ""}>Done</option>
-        </select></td>
-        <td>${new Date(b.created_at).toLocaleString()}</td>
-        </tr>`
-            })
+<tr>
+<td>${b.id}</td>
+<td>${b.patient_name}</td>
+<td>${b.mobile}</td>
+<td>${b.tests}</td>
+<td>₹${b.total}</td>
+<td>${b.status || "New"}</td>
+</tr>`;
+            });
         }
 
-        async function setBookingStatus(id, status) {
-            await fetch(`${BOOKING_API}/${id}/status`, { method: "PUT", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
-            loadData();
-        }
-
-        /* TAB SWITCH */
-        function showContacts() { contactTable.style.display = ""; bookingTable.style.display = "none" }
-        function showBookings() { contactTable.style.display = "none"; bookingTable.style.display = ""; renderBookings() }
-
-        /* EXPORT */
         function exportExcel() {
-            const data = bookingTable.style.display === "none" ? contacts : bookings;
-            const ws = XLSX.utils.json_to_sheet(data);
+            const ws = XLSX.utils.json_to_sheet(contacts.filter(x => !x._deleted));
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Data");
-            XLSX.writeFile(wb, "medilab_export.xlsx");
+            XLSX.utils.book_append_sheet(wb, ws, "Contacts");
+            XLSX.writeFile(wb, "medilab_contacts.xlsx");
         }
 
-        loadData();
+        loadContacts();
     </script>
 
 </body>
