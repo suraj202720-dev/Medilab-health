@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Digital Health Reports | Medilab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-700">
+
+    <!-- ================= HEADER ================= -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-extrabold text-blue-600">MEDILAB</h1>
+            <a href="medilab.html" class="text-blue-600 font-semibold">Home</a>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <section class="bg-gradient-to-r from-indigo-600 to-blue-600 text-white py-28 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold">
+            Digital Health Reports
+        </h2>
+        <p class="mt-4 text-lg opacity-90 max-w-3xl mx-auto">
+            Access your lab reports anytime, anywhere with complete privacy & security
+        </p>
+    </section>
+
+    <!-- ================= FEATURES ================= -->
+    <section class="max-w-7xl mx-auto px-6 py-28">
+        <div class="grid md:grid-cols-4 gap-10 text-center">
+
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:cloud-check-outline" class="text-6xl text-blue-600"></iconify-icon>
+                <h4 class="mt-4 font-bold text-lg">Cloud Stored</h4>
+                <p class="opacity-70 mt-2">Your reports are safely stored online</p>
+            </div>
+
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:shield-lock-outline" class="text-6xl text-blue-600"></iconify-icon>
+                <h4 class="mt-4 font-bold text-lg">Secure & Private</h4>
+                <p class="opacity-70 mt-2">Only you can access your reports</p>
+            </div>
+
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:file-download-outline" class="text-6xl text-blue-600"></iconify-icon>
+                <h4 class="mt-4 font-bold text-lg">Download Anytime</h4>
+                <p class="opacity-70 mt-2">PDF reports available instantly</p>
+            </div>
+
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:doctor" class="text-6xl text-blue-600"></iconify-icon>
+                <h4 class="mt-4 font-bold text-lg">Doctor Friendly</h4>
+                <p class="opacity-70 mt-2">Easily share with doctors</p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= REPORT LIST ================= -->
+    <section class="bg-slate-100 py-28">
+        <h3 class="text-3xl font-bold text-center mb-20">
+            Your Reports
+        </h3>
+
+        <div class="max-w-6xl mx-auto px-6 space-y-8">
+
+            <!-- REPORT CARD -->
+            <div
+                class="bg-white p-8 rounded-3xl shadow hover:shadow-xl transition flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                    <h4 class="text-xl font-bold">Full Body Checkup</h4>
+                    <p class="opacity-70 mt-1">Report ID: #MLB10231</p>
+                    <p class="opacity-70">Date: 12 Jan 2026</p>
+                </div>
+
+                <div class="flex items-center gap-6 mt-6 md:mt-0">
+                    <span class="px-4 py-2 rounded-full bg-green-100 text-green-700 font-semibold text-sm">
+                        Completed
+                    </span>
+
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition">
+                        View
+                    </button>
+
+                    <button class="bg-slate-200 px-6 py-2 rounded-xl hover:bg-slate-300 transition">
+                        Download
+                    </button>
+                </div>
+            </div>
+
+            <!-- REPORT CARD -->
+            <div
+                class="bg-white p-8 rounded-3xl shadow hover:shadow-xl transition flex flex-col md:flex-row md:items-center justify-between">
+                <div>
+                    <h4 class="text-xl font-bold">Diabetes Care</h4>
+                    <p class="opacity-70 mt-1">Report ID: #MLB10288</p>
+                    <p class="opacity-70">Date: 18 Jan 2026</p>
+                </div>
+
+                <div class="flex items-center gap-6 mt-6 md:mt-0">
+                    <span class="px-4 py-2 rounded-full bg-yellow-100 text-yellow-700 font-semibold text-sm">
+                        Processing
+                    </span>
+
+                    <button class="bg-slate-300 text-slate-600 px-6 py-2 rounded-xl cursor-not-allowed">
+                        View
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-900 text-slate-300 py-10 text-center text-sm opacity-70">
+        © 2026 Medilab. All rights reserved.
+    </footer>
+
+</body>
+
+</html>

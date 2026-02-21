@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lab Tests at Home | Medilab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+</head>
+
+<body class="bg-slate-50 text-slate-700">
+
+    <!-- ================= HEADER ================= -->
+    <header class="bg-white border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-extrabold text-blue-600">MEDILAB</h1>
+            <a href="medilab.html" class="text-blue-600 font-semibold">Home</a>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-24 text-center">
+        <h2 class="text-4xl md:text-5xl font-bold">
+            Lab Tests at Home
+        </h2>
+        <p class="mt-4 text-lg opacity-90 max-w-2xl mx-auto">
+            Safe sample collection at your doorstep with trusted lab reports
+        </p>
+    </section>
+
+    <!-- ================= WHY MEDILAB ================= -->
+    <section class="max-w-7xl mx-auto px-6 py-24">
+        <h3 class="text-3xl font-bold text-center mb-16">
+            Why Choose Medilab?
+        </h3>
+        <a href="digital-reports.html">
+            <div class="grid md:grid-cols-4 gap-10 text-center">
+                <div class="bg-white p-8 rounded-2xl shadow hover:shadow-xl hover:-translate-y-2 transition">
+                    <iconify-icon icon="mdi:home-heart" class="text-5xl text-blue-600"></iconify-icon>
+                    <p class="font-semibold mt-4">Home Collection</p>
+                </div>
+        </a>
+
+        <a href="digital-reports.html">
+            <div class="bg-white p-8 rounded-2xl shadow hover:shadow-xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:shield-check" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="font-semibold mt-4">Trusted Labs</p>
+            </div>
+        </a>
+
+        <a href="digital-reports.html">
+            <div class="bg-white p-8 rounded-2xl shadow hover:shadow-xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:clock-fast" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="font-semibold mt-4">Fast Reports</p>
+            </div>
+        </a>
+
+        <a href="digital-reports.html">
+            <div class="bg-white p-8 rounded-2xl shadow hover:shadow-xl hover:-translate-y-2 transition">
+                <iconify-icon icon="mdi:file-document-check" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="font-semibold mt-4">Digital Reports</p>
+            </div>
+
+        </a>
+
+        </div>
+    </section>
+
+    <!-- ================= LAB PACKAGES ================= -->
+    <section class="bg-slate-100 py-28">
+        <h3 class="text-3xl font-bold text-center mb-20">
+            Popular Lab Test Packages
+        </h3>
+
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-10">
+
+            <!-- PACKAGE -->
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-3 transition">
+                <h4 class="text-xl font-bold mb-3">Full Body Checkup</h4>
+                <p class="opacity-70 mb-6">70+ tests covering full health</p>
+                <div class="text-3xl font-extrabold text-blue-600 mb-6">₹999</div>
+                <button onclick="bookPackage('Full Body Checkup')"
+                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl hover:scale-105 transition">
+                    Book Now
+                </button>
+            </div>
+
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-3 transition">
+                <h4 class="text-xl font-bold mb-3">Diabetes Care</h4>
+                <p class="opacity-70 mb-6">Sugar & HbA1c monitoring</p>
+                <div class="text-3xl font-extrabold text-blue-600 mb-6">₹399</div>
+                <button onclick="bookPackage('Diabetes Care')"
+                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl hover:scale-105 transition">
+                    Book Now
+                </button>
+            </div>
+
+            <div class="bg-white p-10 rounded-3xl shadow hover:shadow-2xl hover:-translate-y-3 transition">
+                <h4 class="text-xl font-bold mb-3">Heart Health</h4>
+                <p class="opacity-70 mb-6">ECG & cholesterol profile</p>
+                <div class="text-3xl font-extrabold text-blue-600 mb-6">₹699</div>
+                <button onclick="bookPackage('Heart Health')"
+                    class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl hover:scale-105 transition">
+                    Book Now
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ================= HOW IT WORKS ================= -->
+    <section class="max-w-7xl mx-auto px-6 py-28">
+        <h3 class="text-3xl font-bold text-center mb-20">
+            How It Works
+        </h3>
+
+        <div class="grid md:grid-cols-4 gap-10 text-center">
+            <div>
+                <iconify-icon icon="mdi:calendar-check" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="mt-4 font-semibold">Book Test</p>
+            </div>
+            <div>
+                <iconify-icon icon="mdi:home-account" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="mt-4 font-semibold">Home Collection</p>
+            </div>
+            <div>
+                <iconify-icon icon="mdi:flask-outline" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="mt-4 font-semibold">Lab Testing</p>
+            </div>
+            <div>
+                <iconify-icon icon="mdi:file-check-outline" class="text-5xl text-blue-600"></iconify-icon>
+                <p class="mt-4 font-semibold">Get Reports</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= CTA ================= -->
+    <section class="bg-gradient-to-r from-blue-600 to-indigo-600 py-20 text-center text-white">
+        <h3 class="text-3xl font-bold mb-6">
+            Ready to book your lab test?
+        </h3>
+        <a href="contact.html"
+            class="inline-block bg-white text-blue-600 px-12 py-4 rounded-2xl font-semibold shadow hover:scale-105 transition">
+            Book Lab Test
+        </a>
+    </section>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-slate-900 text-slate-300 py-10 text-center text-sm opacity-70">
+        © 2026 Medilab. All rights reserved.
+    </footer>
+
+    <!-- ================= ADD-ON SCRIPT ================= -->
+    <script>
+        function bookPackage(packageName) {
+            localStorage.setItem("selected_package", packageName);
+            window.location.href = "contact.html";
+        }
+    </script>
+
+</body>
+
+</html>
